@@ -19,11 +19,11 @@ public class CardModel {
     private String id;
 
     @JsonProperty("userDocument")
-    @Column(name = "userDocument", nullable = false)
+    @Column(name = "userDocument", nullable = false, columnDefinition = "TEXT")
     private String userDocument;
 
     @JsonProperty("creditCardToken")
-    @Column(name = "creditCardToken", nullable = false)
+    @Column(name = "creditCardToken", nullable = false, columnDefinition = "TEXT")
     private String creditCardToken;
 
     @JsonProperty("value")
