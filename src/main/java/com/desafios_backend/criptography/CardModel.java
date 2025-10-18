@@ -2,7 +2,6 @@ package com.desafios_backend.criptography;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,7 +12,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Transactional
 public class CardModel {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

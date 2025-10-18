@@ -1,23 +1,16 @@
 package com.desafios_backend.criptography;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import javax.crypto.Cipher;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.PrivateKey;
-import java.security.PublicKey;
+import java.io.*;
+import java.security.*;
 import java.util.Base64;
 
 public class RSAUtils {
 
     public static final String ALGORITHM = "RSA";
-    public static final String PATH_PUBLIC_KEY = "./src/main/resources/keys/public.key/";
-    public static final String PATH_PRIVATE_KEY = "./src/main/resources/keys/private.key/";
+    public static final String PATH_PUBLIC_KEY = "./src/main/resources/keys/public.key";
+    public static final String PATH_PRIVATE_KEY = "./src/main/resources/keys/private.key";
+    public static  final int KEY_SIZE = 256;
 
     private static void createFiles(File publicKeyFile, File privateKeyFile) throws IOException {
         if (publicKeyFile.getParentFile() != null) {
@@ -45,25 +38,27 @@ public class RSAUtils {
         privateKeyOS.close();
     }
 
-    public static void keyPairGen() {
-        try {
-            final KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(ALGORITHM);
-            keyPairGenerator.initialize(1024);
-            KeyPair keyPair = keyPairGenerator.generateKeyPair();
+    public static void keyPairGen() throws NoSuchAlgorithmException, IOException {
+        final KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(ALGORITHM);
+        keyPairGenerator.initialize(KEY_SIZE);
+        KeyPair keyPair = keyPairGenerator.generateKeyPair();
 
-            File publicKeyFile = new File(PATH_PUBLIC_KEY);
-            File privateKeyFile = new File(PATH_PRIVATE_KEY);
+        File publicKeyFile = new File(PATH_PUBLIC_KEY);
+        File privateKeyFile = new File(PATH_PRIVATE_KEY);
 
-            createFiles(publicKeyFile, privateKeyFile);
-            saveKeyPair(publicKeyFile, privateKeyFile, keyPair);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
+        createFiles(publicKeyFile, privateKeyFile);
+        saveKeyPair(publicKeyFile, privateKeyFile, keyPair);
     }
 
-    public static String encrypt(String data, PublicKey publicKey) throws Exception {
+    public static boolean checkSOKeys() {
+        File publicKey = new File(PATH_PUBLIC_KEY);
+        File privateKey = new File(PATH_PRIVATE_KEY);
+
+        return publicKey.exists() && privateKey.exists();
+    }
+
+    public static String encrypt(String data) throws Exception {
+        PublicKey publicKey = getPublicKey();
         Cipher cipher = Cipher.getInstance(ALGORITHM);
         cipher.init(Cipher.ENCRYPT_MODE, publicKey);
         byte[] encryptedData = cipher.doFinal(data.getBytes());
@@ -71,10 +66,21 @@ public class RSAUtils {
         return Base64.getEncoder().encodeToString(encryptedData);
     }
 
-    public static String decrypt(String data, PrivateKey privateKey) throws Exception {
+    public static String decrypt(String data) throws Exception {
+        PrivateKey privateKey = getPrivateKey();
         Cipher cipher = Cipher.getInstance(ALGORITHM);
         cipher.init(Cipher.DECRYPT_MODE, privateKey);
         byte[] decryptedData = cipher.doFinal(Base64.getDecoder().decode(data));
         return new String(decryptedData);
+    }
+
+    public static PublicKey getPublicKey() throws IOException, ClassNotFoundException {
+        ObjectInputStream publicKey = new ObjectInputStream(new FileInputStream(PATH_PUBLIC_KEY));
+        return (PublicKey) publicKey.readObject();
+    }
+
+    public static PrivateKey getPrivateKey() throws IOException, ClassNotFoundException {
+        ObjectInputStream privateKey = new ObjectInputStream(new FileInputStream(PATH_PRIVATE_KEY));
+        return (PrivateKey) privateKey.readObject();
     }
 }
