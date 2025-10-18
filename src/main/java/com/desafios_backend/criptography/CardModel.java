@@ -18,7 +18,7 @@ public class CardModel {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id")
-    private Long id;
+    private String id;
 
     @JsonProperty("userDocument")
     @Column(name = "userDocument", nullable = false)

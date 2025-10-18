@@ -2,19 +2,17 @@ package com.desafios_backend.criptography;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 @Service
 public class CardService {
 
-    @Value("${cripto.publicKey}")
     private PublicKey publicKey;
 
-    @Value("${cripto.privateKey}")
     private PrivateKey privateKey;
 
     @Autowired
@@ -23,17 +21,23 @@ public class CardService {
     @Autowired
     private CardRepository cardRepository;
 
-    public CardModel createCard(CardDto cardDto) throws Exception {
+    public CardDto createCard(CardDto cardDto) throws Exception {
         CardModel cardModel = this.modelMapper.map(cardDto, CardModel.class);
         cardModel.setCreditCardToken(RSAUtils.encrypt(cardModel.getCreditCardToken(), this.publicKey));
         cardModel.setUserDocument(RSAUtils.encrypt(cardModel.getUserDocument(), this.publicKey));
+        CardModel savedCard = this.cardRepository.save(cardModel);
 
-        return this.cardRepository.save(cardModel);
+        return this.modelMapper.map(savedCard, CardDto.class);
     }
 
-    public Collection<CardModel> getAllCards() throws Exception{
+    public Collection<CardDto> getAllCards() throws Exception{
         Collection<CardModel> cardModelCollection = this.cardRepository.findAll();
-        return this.decryptMany(cardModelCollection);
+        Collection<CardModel> cardModelCollectionDecrypted = this.decryptMany(cardModelCollection);
+
+        return cardModelCollectionDecrypted
+                .stream()
+                .map(cardModel -> this.modelMapper.map(cardModel, CardDto.class))
+                .collect(Collectors.toList());
     }
 
     private Collection<CardModel> decryptMany(Collection<CardModel> cards) throws Exception {
