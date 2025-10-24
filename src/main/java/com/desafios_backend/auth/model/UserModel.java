@@ -1,6 +1,7 @@
 package com.desafios_backend.auth.model;
 
 
+import com.desafios_backend.auth.enums.UserRoles;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

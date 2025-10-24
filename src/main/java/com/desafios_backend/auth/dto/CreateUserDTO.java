@@ -1,7 +1,11 @@
 package com.desafios_backend.auth.dto;
 
 import com.desafios_backend.auth.RegexPatterns;
+import com.desafios_backend.auth.enums.UserRoles;
+import com.desafios_backend.auth.model.RoleModel;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -14,7 +18,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDTO {
+public class CreateUserDTO {
 
     @JsonProperty("userEmail")
     @NotEmpty
@@ -28,4 +32,7 @@ public class UserDTO {
         message = "Password must have some special character and number"
     )
     private String password;
+
+    @Enumerated(EnumType.STRING)
+    private RoleModel role;
 }
