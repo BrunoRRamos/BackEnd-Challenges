@@ -1,0 +1,11 @@
+# IntelliJ IDEA
+.idea/
+.vscode/
+
+# Gradle
+.gradle/
+build/
+bin/
+
+# .Env File
+*.env
