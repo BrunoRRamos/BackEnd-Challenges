@@ -43,10 +43,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void createUser(CreateUserDTO createUserDTO) {
-        new UserModel() = UserModel.builder()
+        UserModel newUser = UserModel.builder()
                 .email(createUserDTO.getEmail())
                 .password(securityConfiguration.passwordEncoder().encode(createUserDTO.getPassword()))
                 .roles(List.of(RoleModel.builder().roleName(createUserDTO.getRole()).build()))
                 .build();
+
+        this.userRepository.save(newUser);
     }
 }

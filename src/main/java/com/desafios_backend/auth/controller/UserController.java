@@ -10,12 +10,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(name = "/users")
+@RequestMapping("/users")
 public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping(name = "/login")
+    @PostMapping("/login")
     public ResponseEntity<RecoveryJwtTokenDto> authenticateUser(@RequestBody UserLoginDTO userLoginDTO) {
         RecoveryJwtTokenDto token = userService.authenticateUser(userLoginDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(token);
@@ -27,7 +27,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @GetMapping(name = "/test")
+    @GetMapping("/test")
     public ResponseEntity<String> getAuthenticationTest() {
         return ResponseEntity.status(HttpStatus.OK).body("Authenticated successfully");
     }

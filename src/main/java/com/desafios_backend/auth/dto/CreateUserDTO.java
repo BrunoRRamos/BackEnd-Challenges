@@ -9,10 +9,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @Builder
@@ -20,19 +17,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CreateUserDTO {
 
-    @JsonProperty("userEmail")
+    @JsonProperty("email")
     @NotEmpty
     private String email;
 
-    @JsonProperty("userPasword")
+    @JsonProperty("password")
     @NotEmpty
-    @Size(min = 6, max = 16)
-    @Pattern(
-        regexp = RegexPatterns.PASSWORD_PATTERN,
-        message = "Password must have some special character and number"
-    )
     private String password;
 
     @Enumerated(EnumType.STRING)
-    private RoleModel role;
+    private UserRoles role;
 }

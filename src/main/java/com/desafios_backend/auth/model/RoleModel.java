@@ -5,8 +5,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 
-@Table(name = "user_roles")
-@Entity(name = "Roles")
+@Entity()
+@Table(name = "roles")
 @Data
 @Builder
 @NoArgsConstructor

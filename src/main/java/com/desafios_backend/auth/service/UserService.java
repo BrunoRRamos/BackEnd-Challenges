@@ -7,4 +7,5 @@ import com.desafios_backend.auth.dto.UserLoginDTO;
 public interface UserService {
     RecoveryJwtTokenDto authenticateUser(UserLoginDTO userLoginDTO);
     void createUser(CreateUserDTO createUserDTO);
+
 }
